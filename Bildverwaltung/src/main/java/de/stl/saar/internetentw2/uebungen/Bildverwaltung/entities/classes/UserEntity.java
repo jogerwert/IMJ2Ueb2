@@ -87,14 +87,8 @@ public class UserEntity implements User {
 	}
 
 	@Override
-	public void setDateOfBirth(String dateOfBirth) {
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		try {
-			this.dateOfBirth = format.parse(dateOfBirth);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth=dateOfBirth;
 	}
 	
 	@Override

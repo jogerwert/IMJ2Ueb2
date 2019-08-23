@@ -22,6 +22,6 @@ public interface User {
 	
 	Date getDateOfBirth();
 	
-	void setDateOfBirth(String dateOfBirth);
+	void setDateOfBirth(Date dateOfBirth);
 
 }

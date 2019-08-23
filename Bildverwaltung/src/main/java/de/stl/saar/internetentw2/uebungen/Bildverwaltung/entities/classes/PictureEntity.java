@@ -1,6 +1,5 @@
 package de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.classes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.Fetch;
@@ -27,16 +26,16 @@ public class PictureEntity implements Picture {
 	private String title;
 	private String description;
 	private User owner;
-	private List<User> release;
+	private List<User> releaseList;
 	
 	protected PictureEntity() {};
 	
-	public PictureEntity(String picturePath, String title, String description, User owner) {
+	public PictureEntity(String picturePath, String title, String description, User owner, List<User> releaseList) {
 		this.picturePath = picturePath;
 		this.title = title;
 		this.description = description;
 		this.owner = owner;
-		this.release = new ArrayList<User>();
+		this.releaseList = releaseList;
 	};
 
 	@Override
@@ -94,22 +93,22 @@ public class PictureEntity implements Picture {
 	}
 
 	@Override
-	@OneToMany(targetEntity=UserEntity.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@ManyToMany(targetEntity=UserEntity.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinColumn(name = "userId")
 	@Fetch(value = FetchMode.SUBSELECT)
 	public List<User> getRelease() {
-		return release;
+		return releaseList;
 	}
 
 	@Override
-	public void setRelease(List<User> release) {
-		this.release=release;
+	public void setRelease(List<User> releaseList) {
+		this.releaseList=releaseList;
 	}
 	
 	@Override
 	public String toString() {
 		return "PictureEntity [pictureId=" + pictureId + ", picturePath=" + picturePath + ", title=" + title 
-				+ ", description=" + description + ", owner" + owner + ", releases" + release + "]";
+				+ ", description=" + description + ", owner" + owner + ", releases" + releaseList + "]";
 	}
 
 }
