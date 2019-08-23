@@ -26,6 +26,6 @@ public interface Picture {
 	
 	List<User> getRelease();
 	
-	void setRelease(List<User> release, User user);
+	void setRelease(List<User> release);
 
 }

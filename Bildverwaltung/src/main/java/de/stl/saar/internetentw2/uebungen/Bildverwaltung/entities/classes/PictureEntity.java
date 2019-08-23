@@ -3,10 +3,18 @@ package de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.classes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Picture;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
@@ -74,6 +82,8 @@ public class PictureEntity implements Picture {
 	}
 
 	@Override
+	@OneToOne(targetEntity=UserEntity.class, cascade = CascadeType.MERGE)
+	@JoinColumn(name = "userId")
 	public User getOwner() {
 		return owner;
 	}
@@ -84,15 +94,16 @@ public class PictureEntity implements Picture {
 	}
 
 	@Override
+	@OneToMany(targetEntity=UserEntity.class, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	@JoinColumn(name = "userId")
+	@Fetch(value = FetchMode.SUBSELECT)
 	public List<User> getRelease() {
 		return release;
 	}
 
 	@Override
-	public void setRelease(List<User> release, User user) {
-		release.add(user);
-		this.release = release;
-		
+	public void setRelease(List<User> release) {
+		this.release=release;
 	}
 	
 	@Override
