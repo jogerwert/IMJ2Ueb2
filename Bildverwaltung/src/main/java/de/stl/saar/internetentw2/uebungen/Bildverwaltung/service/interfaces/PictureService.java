@@ -5,6 +5,13 @@ import java.util.List;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Picture;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 
+/**
+ * Interface zur Kapselung von Service-Objekten fuer Picture.
+ * 
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 public interface PictureService {
 	
 	Picture createPicture(String picturePath, String title, String description, User owner, List<User> releaseList);

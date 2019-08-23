@@ -2,6 +2,13 @@ package de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces;
 
 import java.util.Date;
 
+/**
+ * Interface zur eventuellen Kapselung der User-Datenbankobjekte.
+ * 
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 public interface User {
 	
 	long getUserId();

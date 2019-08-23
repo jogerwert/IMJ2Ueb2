@@ -2,6 +2,13 @@ package de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces;
 
 import java.util.List;
 
+/**
+ * Interface zur eventuellen Kapselung der Picture-Datenbankobjekte.
+ * 
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 public interface Picture {
 	
 	long getPictureId();

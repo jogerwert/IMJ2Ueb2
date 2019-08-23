@@ -11,6 +11,12 @@ import javax.persistence.Id;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 
+/**
+ * Entity-Klasse fuer User. Wird von Hibernate verwendet.
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 @Entity
 public class UserEntity implements User {
 	

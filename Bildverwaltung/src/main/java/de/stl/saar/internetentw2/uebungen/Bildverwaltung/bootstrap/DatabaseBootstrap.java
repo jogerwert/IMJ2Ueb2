@@ -14,6 +14,13 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Use
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.repositories.PictureRepository;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.repositories.UserRepository;
 
+/**
+ * Initialisiert die Datenbank mit Usern und Pictures.
+ * 
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 @Component
 public class DatabaseBootstrap implements ApplicationListener<ContextRefreshedEvent>{
 	

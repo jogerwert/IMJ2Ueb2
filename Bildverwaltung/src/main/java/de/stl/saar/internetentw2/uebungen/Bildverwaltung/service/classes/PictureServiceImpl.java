@@ -11,6 +11,15 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Use
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.repositories.PictureRepository;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.PictureService;
 
+/**
+ * Service-Klasse, welche das Picture-Repository kapselt.
+ * Es werden ausgewaehlte Methoden zum Laden/Speichern/Loeschen
+ * von Objekten der Datenbank zur Verfuegung gestellt.
+ * 
+ * @author Michelle Blau, Dominik Gödicke
+ *
+ */
+
 public class PictureServiceImpl implements PictureService{
 	
 	@Autowired
@@ -53,16 +62,30 @@ public class PictureServiceImpl implements PictureService{
 		return pictureList;
 	}
 	
+	/**
+	 * Diese Methode speichert/ueberschreibt Picture-Objekte in der Datenbank.
+	 * Im Falle der Speicherung wird das Picture-Objekt mit einer Id ausgestattet.
+	 * Die Id ist der Primaerschluessel.
+	 * @param picture - Picture-Objekt, dessen pictureId veraendert wird, sofern es nicht in der DB existiert.
+	 */
 	@Override
 	public void savePicture(Picture picture) {
 		pictureRepository.save((PictureEntity)picture);
 	}
 	
+	/**
+	 * Loescht ein uebergebenes Picture-Objekt aus der Datenbank.
+	 * @param picture - Picture-Objekt
+	 */
 	@Override
 	public void deletePicture(Picture picture) {
 		pictureRepository.delete((PictureEntity)picture);
 	}
 	
+	/**
+	 * Erstellt einen String, der das Picture-Objekt zusammenfassend darstellt.
+	 * @param picture - Picture-Objekt, das zusammengefasst werden soll
+	 */
 	@Override
 	public String summarizePicture(Picture picture) {
 		//TODO muss gemacht werden

@@ -5,6 +5,13 @@ import java.util.List;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 
+/**
+ * Interface zur Kapselung von Service-Objekten fuer User.
+ * 
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 public interface UserService {
 	
 	User createUser(String userName,String userPassword,String userEmail,String dateOfBirth);

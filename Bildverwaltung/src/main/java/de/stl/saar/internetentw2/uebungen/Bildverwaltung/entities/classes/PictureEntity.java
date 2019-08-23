@@ -18,6 +18,12 @@ import org.hibernate.annotations.FetchMode;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Picture;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 
+/**
+ * Entity-Klasse fuer Pictures. Wird von Hibernate verwendet.
+ * @author Michelle Blau, Dominik Goedicke
+ *
+ */
+
 @Entity
 public class PictureEntity implements Picture {
 	
