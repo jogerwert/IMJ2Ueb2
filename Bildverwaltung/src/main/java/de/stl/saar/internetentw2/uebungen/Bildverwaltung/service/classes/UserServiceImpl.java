@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public String summarizeUser(User user) {
-		
+		//TODO muss gemacht werden
+		return "";
 	}
 }

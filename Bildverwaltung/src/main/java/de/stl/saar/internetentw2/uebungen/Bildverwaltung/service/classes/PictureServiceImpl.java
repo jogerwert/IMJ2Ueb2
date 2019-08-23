@@ -65,7 +65,8 @@ public class PictureServiceImpl implements PictureService{
 	
 	@Override
 	public String summarizePicture(Picture picture) {
-		
+		//TODO muss gemacht werden
+		return "";
 	}
 
 }

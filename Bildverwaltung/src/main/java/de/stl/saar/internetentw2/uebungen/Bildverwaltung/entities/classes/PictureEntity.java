@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -81,7 +81,7 @@ public class PictureEntity implements Picture {
 	}
 
 	@Override
-	@OneToOne(targetEntity=UserEntity.class, cascade = CascadeType.MERGE)
+	@ManyToOne(targetEntity=UserEntity.class, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "userId")
 	public User getOwner() {
 		return owner;
