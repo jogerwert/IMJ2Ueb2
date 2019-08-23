@@ -1,5 +1,7 @@
 package de.stl.saar.internetentw2.uebungen.Bildverwaltung.repositories;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.classes.PictureEntity;
@@ -13,5 +15,7 @@ public interface PictureRepository extends CrudRepository<PictureEntity, Long> {
 	Picture findBytitle(String title);
 	
 	Picture findByOwner(User owner);
+	
+	List<Picture> findByRelease(User user);
 	
 }
