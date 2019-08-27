@@ -29,6 +29,4 @@ public interface PictureService {
 	void savePicture(Picture picture);
 	
 	void deletePicture(Picture picture);
-	
-	String summarizePicture(Picture picture);
 }

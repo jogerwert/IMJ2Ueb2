@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.classes.PictureEntity;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Picture;
@@ -20,6 +21,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.Pict
  *
  */
 
+@Service
 public class PictureServiceImpl implements PictureService{
 	
 	@Autowired
@@ -80,16 +82,6 @@ public class PictureServiceImpl implements PictureService{
 	@Override
 	public void deletePicture(Picture picture) {
 		pictureRepository.delete((PictureEntity)picture);
-	}
-	
-	/**
-	 * Erstellt einen String, der das Picture-Objekt zusammenfassend darstellt.
-	 * @param picture - Picture-Objekt, das zusammengefasst werden soll
-	 */
-	@Override
-	public String summarizePicture(Picture picture) {
-		//TODO muss gemacht werden
-		return "";
 	}
 
 }

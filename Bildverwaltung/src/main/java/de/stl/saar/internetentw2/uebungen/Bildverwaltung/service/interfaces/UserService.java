@@ -8,7 +8,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Use
 /**
  * Interface zur Kapselung von Service-Objekten fuer User.
  * 
- * @author Michelle Blau, Dominik Goedicke
+ * @author Michelle Blau, Dominik Goedicke, Johannes Gerwert
  *
  */
 
@@ -30,5 +30,7 @@ public interface UserService {
 	
 	void deleteUser(User user);
 	
-	String summarizeUser(User user);
+	boolean authenticateUser(String userName, String userPassword);
+	
+	boolean checkUserExistance(String userName);
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.classes.UserEntity;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
@@ -15,10 +16,11 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.User
  * Es werden ausgewaehlte Methoden zum Laden/Speichern/Loeschen
  * von Objekten der Datenbank zur Verfuegung gestellt.
  * 
- * @author Michelle Blau, Dominik Gödicke
+ * @author Michelle Blau, Dominik Gödicke, Johannes Gerwert
  *
  */
 
+@Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
@@ -82,12 +84,37 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	/**
-	 * Erstellt einen String, der das User-Objekt zusammenfassend darstellt.
-	 * @param user - User-Objekt, das zusammengefasst werden soll
+	 * Ueberprueft die Login-Daten eines Benutzers.
+	 * 
+	 * @param userName - Eingegebener Nutzername
+	 * @param userPassword - Eingegebenes Passwort
+	 * @return Ergebnis der Authentifizierung
 	 */
-	@Override
-	public String summarizeUser(User user) {
-		//TODO muss gemacht werden
-		return "";
+	public boolean authenticateUser(String userName, String userPassword) {
+		boolean authenticated = false;
+		
+		User user = findByUserName(userName);
+		
+		if(user == null) {
+			authenticated = false;
+		}else if(user.getUserPassword().equals(userPassword)) {
+			authenticated = true;
+		}
+		
+		return authenticated;
+	}
+	
+	public boolean checkUserExistance(String userName) {
+		boolean userDoesNotExist = true;
+		
+		User user = findByUserName(userName);
+		
+		if(user != null) {
+			if(!user.getUserName().isEmpty()) {
+				userDoesNotExist = false;
+			}
+		}
+		
+		return userDoesNotExist;
 	}
 }
