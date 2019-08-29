@@ -92,7 +92,6 @@ public class PictureView extends TabSheet
 	}
 	
 	private void initializeUploadPictureLayout(FormLayout uploadPictureLayout) {
-		//TODO: Databinding
 		
 		Binder<PictureForm> pictureFormBinder = new Binder<>(PictureForm.class);
 		
@@ -172,6 +171,7 @@ public class PictureView extends TabSheet
 				try {
 					pictureFormBinder.writeBean(pictureForm);
 					
+					//TODO: check if path exists
 					if(pathArray[0] == null) {
 						Notification.show("Bitte zuerst ein Bild hochladen!", 
 								Type.WARNING_MESSAGE);
