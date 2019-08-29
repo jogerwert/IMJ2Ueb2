@@ -70,7 +70,7 @@ public class LoginView extends TabSheet
 		loginLayout.addComponent(pwdLoginPassword);
 		
 		userFormBinder.forField(txtLoginUserName)
-		.withValidator( (String userName) -> !userName.isEmpty(), 
+		.withValidator( (String userName) -> !userName.trim().isEmpty(), 
 				"Der Nutzername darf nicht leer sein!")
 		.bind(UserForm::getUserName, UserForm::setUserName);
 		
@@ -137,7 +137,7 @@ public class LoginView extends TabSheet
 		registerLayout.addComponent(dfRegisterBirthday);
 		
 		userFormBinder.forField(txtRegisterUserName).
-		withValidator( (String userName) -> !userName.isEmpty(), 
+		withValidator( (String userName) -> !userName.trim().isEmpty(), 
 				"Der Nutzername darf nicht leer sein!")
 		.withValidator( (String userName) -> userService.checkUserExistance(userName),
 				"Der Nutzername ist bereits vergeben!")

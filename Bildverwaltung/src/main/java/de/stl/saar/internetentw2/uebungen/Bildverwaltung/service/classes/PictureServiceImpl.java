@@ -17,7 +17,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.Pict
  * Es werden ausgewaehlte Methoden zum Laden/Speichern/Loeschen
  * von Objekten der Datenbank zur Verfuegung gestellt.
  * 
- * @author Michelle Blau, Dominik Gödicke
+ * @author Michelle Blau, Dominik Gödicke, Johannes Gerwert
  *
  */
 
@@ -82,6 +82,40 @@ public class PictureServiceImpl implements PictureService{
 	@Override
 	public void deletePicture(Picture picture) {
 		pictureRepository.delete((PictureEntity)picture);
+	}
+
+	/**
+	 * Ueberprueft ob der Titel bereits verwendet wird.
+	 * 
+	 * @param title - Eingegebener Titel
+	 * @return Ergebnis der Ueberpruefung
+	 */
+	@Override
+	public boolean checkTitleExistance(String title) {
+		boolean titleDoesNotExist = false;
+		
+		Picture picture = findBytitle(title);
+		
+		if(picture == null) {
+			if(!picture.getTitle().isEmpty()) {
+				titleDoesNotExist = true;
+			}
+		}
+		return titleDoesNotExist;
+	}
+
+	/**
+	 * Ueberprueft ob das Bild bereits existiert.
+	 * 
+	 * @param path - Uebergebener Pfad
+	 * @return Ergebnis der Ueberpruefung
+	 */
+	@Override
+	public boolean checkPictureExistance(String path) {
+		//TODO
+		boolean pictureDoesNotExist = false;
+		
+		return false;
 	}
 
 }

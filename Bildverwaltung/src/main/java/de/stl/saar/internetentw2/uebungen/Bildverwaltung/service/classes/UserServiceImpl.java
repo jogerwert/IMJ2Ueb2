@@ -104,14 +104,20 @@ public class UserServiceImpl implements UserService {
 		return authenticated;
 	}
 	
+	/**
+	 * Ueberprueft ob der Nutzername bereits existiert.
+	 * 
+	 * @param userName - Eingegebener Nutzername
+	 * @return Ergebnis der Ueberpruefung
+	 */
 	public boolean checkUserExistance(String userName) {
-		boolean userDoesNotExist = true;
+		boolean userDoesNotExist = false;
 		
 		User user = findByUserName(userName);
 		
-		if(user != null) {
+		if(user == null) {
 			if(!user.getUserName().isEmpty()) {
-				userDoesNotExist = false;
+				userDoesNotExist = true;
 			}
 		}
 		

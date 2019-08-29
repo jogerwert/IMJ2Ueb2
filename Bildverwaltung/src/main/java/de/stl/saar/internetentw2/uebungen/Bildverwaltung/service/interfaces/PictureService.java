@@ -8,7 +8,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Use
 /**
  * Interface zur Kapselung von Service-Objekten fuer Picture.
  * 
- * @author Michelle Blau, Dominik Goedicke
+ * @author Michelle Blau, Dominik Goedicke, Johannes Gerwert
  *
  */
 
@@ -29,4 +29,8 @@ public interface PictureService {
 	void savePicture(Picture picture);
 	
 	void deletePicture(Picture picture);
+	
+	boolean checkTitleExistance(String title);
+	
+	boolean checkPictureExistance(String path);
 }
