@@ -44,8 +44,13 @@ public class PictureServiceImpl implements PictureService{
 	}
 	
 	@Override
-	public Picture findByOwner(User owner) {
+	public List<Picture> findByOwner(User owner) {
 		return pictureRepository.findByOwner(owner);
+	}
+	
+	@Override
+	public Picture findByPicturePath(String picturePath) {
+		return pictureRepository.findByPicturePath(picturePath);
 	}
 	
 	@Override
@@ -91,17 +96,15 @@ public class PictureServiceImpl implements PictureService{
 	 * @return Ergebnis der Ueberpruefung
 	 */
 	@Override
-	public boolean checkTitleExistance(String title) {
-		boolean titleDoesNotExist = false;
+	public boolean checkTitleAvailable(String title) {
+		boolean titleAvailable = false;
 		
 		Picture picture = findBytitle(title);
 		
 		if(picture == null) {
-			if(!picture.getTitle().isEmpty()) {
-				titleDoesNotExist = true;
-			}
+			titleAvailable = true;
 		}
-		return titleDoesNotExist;
+		return titleAvailable;
 	}
 
 	/**
@@ -111,11 +114,15 @@ public class PictureServiceImpl implements PictureService{
 	 * @return Ergebnis der Ueberpruefung
 	 */
 	@Override
-	public boolean checkPictureExistance(String path) {
-		//TODO
-		boolean pictureDoesNotExist = false;
+	public boolean checkPathAvailable(String path) {
+		boolean pathAvailable = false;
 		
-		return false;
+		Picture picture = findByPicturePath(path);
+		
+		if(picture == null) {
+			pathAvailable = true;
+		}
+		
+		return pathAvailable;
 	}
-
 }

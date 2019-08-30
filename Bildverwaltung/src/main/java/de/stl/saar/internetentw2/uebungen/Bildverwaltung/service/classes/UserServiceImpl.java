@@ -110,17 +110,15 @@ public class UserServiceImpl implements UserService {
 	 * @param userName - Eingegebener Nutzername
 	 * @return Ergebnis der Ueberpruefung
 	 */
-	public boolean checkUserExistance(String userName) {
-		boolean userDoesNotExist = false;
+	public boolean checkUserNameAvailable(String userName) {
+		boolean userNameAvailable = false;
 		
 		User user = findByUserName(userName);
 		
 		if(user == null) {
-			if(!user.getUserName().isEmpty()) {
-				userDoesNotExist = true;
-			}
+			userNameAvailable = true;
 		}
 		
-		return userDoesNotExist;
+		return userNameAvailable;
 	}
 }

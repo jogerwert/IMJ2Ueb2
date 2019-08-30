@@ -11,21 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
+import com.vaadin.event.selection.MultiSelectionEvent;
+import com.vaadin.event.selection.MultiSelectionListener;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FileResource;
+import com.vaadin.server.Resource;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
@@ -38,6 +45,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Pic
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.forms.PictureForm;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.PictureService;
+import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.UserService;
 
 @SpringView(name="pictures")
 public class PictureView extends TabSheet
@@ -47,10 +55,16 @@ public class PictureView extends TabSheet
 	
 	protected static final String LOGINVIEW = "login";
 	
-	private static final String PICTURE_PATH = "upload" + File.separator + "img";
+	private final String PICTURE_PATH = "upload" + File.separator + "img";
+	
+	private final float IMAGE_HEIGHT = 300.00f;
+	private final float IMAGE_WIDTH = 300.00f;
 	
 	@Autowired
 	private PictureService pictureService;
+	
+	@Autowired
+	private UserService userService;
 	
 	private User currentUser;
 
@@ -67,13 +81,13 @@ public class PictureView extends TabSheet
 			
 			this.currentUser = checkUser;
 		
-			GridLayout myPicturesLayout = new GridLayout();
+			GridLayout myPicturesLayout = new GridLayout(1, 3);
 			initializeMyPicturesLayout(myPicturesLayout);
 			
 			FormLayout uploadPictureLayout = new FormLayout();
 			initializeUploadPictureLayout(uploadPictureLayout);
 			
-			GridLayout  sharedPicturesLayout = new GridLayout();
+			GridLayout  sharedPicturesLayout = new GridLayout(1, 3);
 			initializeSharedPicturesLayout(sharedPicturesLayout);
 			
 			VerticalLayout logoutLayout = new VerticalLayout();
@@ -154,7 +168,7 @@ public class PictureView extends TabSheet
 		pictureFormBinder.forField(txtTitle)
 		.withValidator( (String title) -> !title.trim().isEmpty(), 
 				"Der Titel darf nicht leer sein!")
-		.withValidator( (String title) -> pictureService.checkTitleExistance(title),
+		.withValidator( (String title) -> pictureService.checkTitleAvailable(title),
 				"Der Titel wird bereits verwendet!")
 		.bind(PictureForm::getTitle, PictureForm::setDescription);
 		
@@ -175,6 +189,8 @@ public class PictureView extends TabSheet
 					if(pathArray[0] == null) {
 						Notification.show("Bitte zuerst ein Bild hochladen!", 
 								Type.WARNING_MESSAGE);
+					} else if(!pictureService.checkPathAvailable(pathArray[0])){
+						Notification.show("Ein Bild mit diesem Namen wurde bereits gespeichert!", Type.WARNING_MESSAGE);
 					} else {
 						String picturePath = pathArray[0];
 						String title = pictureForm.getTitle();
@@ -201,7 +217,116 @@ public class PictureView extends TabSheet
 	}
 	
 	private void initializeMyPicturesLayout(GridLayout myPicturesLayout) {
-		//TODO
+		reloadMyPictures(myPicturesLayout);
+	}
+	
+	private void reloadMyPictures(GridLayout myPicturesLayout) {
+		List<Picture> myPicturesList = pictureService.findByOwner(currentUser);
+		
+		myPicturesLayout.removeAllComponents();
+		for (Picture picture : myPicturesList) {
+			VerticalLayout pictureLayout = new VerticalLayout();
+			createSinglePictureDisplay(pictureLayout, picture);
+			myPicturesLayout.addComponent(pictureLayout);
+		}
+	}
+	
+	private void createSinglePictureDisplay(VerticalLayout pictureLayout, Picture picture) {
+		String picturePath = picture.getPicturePath();
+		String title = picture.getTitle();
+		String description = picture.getDescription();
+		List<User> releaseList = picture.getRelease();
+		List<User> userList = userService.findAllUser();
+		
+		//Image
+		File pictureFile = new File(picturePath);
+		Resource pictureResource = new FileResource(pictureFile);
+		Image pictureComponent = new Image("", pictureResource);
+		pictureComponent.setHeight(IMAGE_HEIGHT, Unit.PIXELS);
+		pictureComponent.setWidth(IMAGE_WIDTH, Unit.PIXELS);
+		pictureLayout.addComponent(pictureComponent);
+		
+		//Title
+		Label lblTitle = new Label(title);
+		pictureLayout.addComponent(lblTitle);
+		
+		//Description
+		Label lblDescription = new Label(description);
+		pictureLayout.addComponent(lblDescription);
+		
+		//Button: Delete
+		Button btnDelete = new Button("Löschen");
+		btnDelete.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -6884133918023926301L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				GridLayout parent = (GridLayout) pictureLayout.getParent();
+				parent.removeComponent(pictureLayout);
+				
+				File pictureFile = new File(picture.getPicturePath());
+				if(pictureFile.exists()) {
+					pictureFile.delete();
+				}
+				
+				pictureService.deletePicture(picture);
+				
+				Notification.show("Bild erfolgreich gelöscht", Type.HUMANIZED_MESSAGE);
+			}
+		});
+		
+		pictureLayout.addComponent(btnDelete);
+		
+		//Share
+		
+		FormLayout shareLayout = new FormLayout();
+		
+		//Button: open share list
+		Button btnOpenShare = new Button("Freigeben");
+		btnOpenShare.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -4908487318079395117L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				shareLayout.setVisible(true);
+			}
+		});
+		pictureLayout.addComponent(btnOpenShare);
+		
+		
+		//List: share select
+		List<User> shareList = new ArrayList<User>();
+		
+		TwinColSelect<User> twinShareWith = new TwinColSelect<>();
+		twinShareWith.setItems(userList);
+		twinShareWith.addSelectionListener(new MultiSelectionListener<User>() {
+			private static final long serialVersionUID = 9004150840293228440L;
+
+			@Override
+			public void selectionChange(MultiSelectionEvent<User> event) {
+				shareList.clear();
+				shareList.addAll(event.getNewSelection());
+			}
+		});
+		shareLayout.addComponent(twinShareWith);
+		
+		//Button: share confirm
+		Button btnShare = new Button("Freigeben");
+		btnShare.addClickListener(new ClickListener() {
+			private static final long serialVersionUID = -4049168407669538249L;
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+				releaseList.clear();
+				releaseList.addAll(shareList);
+				shareLayout.setVisible(false);
+			}
+		});
+		shareLayout.addComponent(btnShare);
+		
+		shareLayout.setVisible(false);
+		pictureLayout.addComponent(shareLayout);
+		
 	}
 	
 	private void initializeSharedPicturesLayout(GridLayout sharedPicturesLayout) {

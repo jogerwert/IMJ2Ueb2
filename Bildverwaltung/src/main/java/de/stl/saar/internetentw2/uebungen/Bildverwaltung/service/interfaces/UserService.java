@@ -32,5 +32,5 @@ public interface UserService {
 	
 	boolean authenticateUser(String userName, String userPassword);
 	
-	boolean checkUserExistance(String userName);
+	boolean checkUserNameAvailable(String userName);
 }

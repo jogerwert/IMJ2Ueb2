@@ -11,7 +11,7 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.Use
 /**
  * Repository-Klasse fuer die Picture-Datenbankobjekte.
  * 
- * @author Michelle Blau, Dominik Goedicke
+ * @author Michelle Blau, Dominik Goedicke, Johannes Gerwert
  *
  */
 
@@ -39,7 +39,14 @@ public interface PictureRepository extends CrudRepository<PictureEntity, Long> {
 	 * @return Das gefundene Picture.
 	 */
 	
-	Picture findByOwner(User owner);
+	List<Picture> findByOwner(User owner);
+	
+	/**
+	 * Findet Picture anhand des Picture-Pfads.
+	 * @param picturePath - Speicherort im System.
+	 * @return Das gefundene Picture.
+	 */
+	Picture findByPicturePath(String picturePath);
 	
 	/**
 	 * Findet Picture anhand der freigebenen User.

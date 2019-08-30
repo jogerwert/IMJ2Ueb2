@@ -20,7 +20,9 @@ public interface PictureService {
 	
 	Picture findBytitle(String title);
 	
-	Picture findByOwner(User owner);
+	List<Picture> findByOwner(User owner);
+	
+	Picture findByPicturePath(String picturePath);
 	
 	List<Picture> findByRelease(User user);
 	
@@ -30,7 +32,7 @@ public interface PictureService {
 	
 	void deletePicture(Picture picture);
 	
-	boolean checkTitleExistance(String title);
+	boolean checkTitleAvailable(String title);
 	
-	boolean checkPictureExistance(String path);
+	boolean checkPathAvailable(String path);
 }

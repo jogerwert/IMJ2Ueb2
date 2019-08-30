@@ -139,7 +139,7 @@ public class LoginView extends TabSheet
 		userFormBinder.forField(txtRegisterUserName).
 		withValidator( (String userName) -> !userName.trim().isEmpty(), 
 				"Der Nutzername darf nicht leer sein!")
-		.withValidator( (String userName) -> userService.checkUserExistance(userName),
+		.withValidator( (String userName) -> userService.checkUserNameAvailable(userName),
 				"Der Nutzername ist bereits vergeben!")
 		.bind(UserForm::getUserName, UserForm::setUserName);
 		
