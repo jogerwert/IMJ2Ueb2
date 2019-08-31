@@ -24,7 +24,6 @@ import com.vaadin.spring.navigator.SpringNavigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Image;
@@ -37,7 +36,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Upload;
-import com.vaadin.ui.Upload.FailedEvent;
 import com.vaadin.ui.Upload.Receiver;
 import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.ui.VerticalLayout;
@@ -49,6 +47,13 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.forms.PictureForm;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.PictureService;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.UserService;
 
+/**
+ * Vaadin View Klasse
+ * Erstellt das Hauptfenster.
+ * Hier koennen Bilder angesehen, hochgeladen und geteilt werden.
+ * 
+ * @author Johannes Gerwert
+ */
 @SpringView(name="pictures")
 public class PictureView extends TabSheet
 						implements View{
@@ -57,7 +62,6 @@ public class PictureView extends TabSheet
 	protected static final String LOGINVIEW = "login";
 	
 	private final String PICTURE_PATH = "upload" + File.separator + "img";
-	
 	private final float IMAGE_HEIGHT = 150.00f;
 	private final float IMAGE_WIDTH = 150.00f;
 	
@@ -76,6 +80,9 @@ public class PictureView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt die Tabs des Tab-Layout mithilfe von Methoden
+	 */
 	@PostConstruct
 	public void init() {
 		NavigatorUI navUI = (NavigatorUI) UI.getCurrent();
@@ -112,6 +119,13 @@ public class PictureView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt den Tab zum Hochladen von Bildern
+	 * 
+	 * @param uploadPictureLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 * @param myPicturesLayout - Vaadin-Komponente, in der die Bilder angezeigt werden.
+	 * Wird zum Aktualisieren der angezeigten Bilder verwendet.
+	 */
 	private void initializeUploadPictureLayout(FormLayout uploadPictureLayout, GridLayout myPicturesLayout) {
 		
 		Binder<PictureForm> pictureFormBinder = new Binder<>(PictureForm.class);
@@ -226,10 +240,20 @@ public class PictureView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt den Tab zum Ansehen der eigenen Bilder
+	 * 
+	 * @param myPicturesLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void initializeMyPicturesLayout(GridLayout myPicturesLayout) {
 		reloadMyPictures(myPicturesLayout);
 	}
 	
+	/**
+	 * Hilfsmethode, die alle eigenen Bilder neu laedt.
+	 * 
+	 * @param myPicturesLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void reloadMyPictures(GridLayout myPicturesLayout) {
 		List<Picture> myPicturesList = pictureService.findByOwner(currentUser);
 		
@@ -241,6 +265,12 @@ public class PictureView extends TabSheet
 		}
 	}
 	
+	/**
+	 * Hilfsmethode, die die Elemente zum Anzeigen eines eigenen Bildes erstellt.
+	 * 
+	 * @param pictureLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 * @param picture - Das Bild das angezeigt werden soll.
+	 */
 	private void createSinglePictureDisplay(VerticalLayout pictureLayout, Picture picture) {
 		String title = picture.getTitle();
 		String description = picture.getDescription();
@@ -333,10 +363,20 @@ public class PictureView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt den Tab zum Ansehen der freigegebenen Bilder.
+	 * 
+	 * @param sharedPicturesLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void initializeSharedPicturesLayout(GridLayout sharedPicturesLayout) {
 		reloadSharedPictures(sharedPicturesLayout);
 	}
 	
+	/**
+	 * Hilfsmethode, die alle freigegebenen Bilder neu laedt.
+	 * 
+	 * @param sharedPicturesLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void reloadSharedPictures(GridLayout sharedPicturesLayout) {
 		List<Picture> sharedPicturesList = pictureService.findByRelease(currentUser);
 		
@@ -348,6 +388,12 @@ public class PictureView extends TabSheet
 		}
 	}
 	
+	/**
+	 * Hilfsmethode, die die Elemente zum Anzeigen eines freigegebenen Bildes erstellt.
+	 * 
+	 * @param sharedLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 * @param picture - Das Bild das angezeigt werden soll.
+	 */
 	private void createSingleSharedPictureDisplay(VerticalLayout sharedLayout, Picture picture) {
 		String ownerName = picture.getOwner().getUserName();
 		String title = picture.getTitle();
@@ -371,6 +417,11 @@ public class PictureView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt den Tab in dem man sich ausloggen kann.
+	 * 
+	 * @param logoutLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void initializeLogoutLayout(VerticalLayout logoutLayout) {
 		
 		Button btnLogout = new Button("Ausloggen");
@@ -391,6 +442,14 @@ public class PictureView extends TabSheet
 		logoutLayout.addComponent(btnLogout);
 	}
 	
+	/**
+	 * Hilfsmethode, die ein Vaadin-Image aus einem Picture-Objekt erstellt.
+	 * Die Caption wird auf den leeren String gestellt.
+	 * Hoehe und Breite werden Konstanten entnommen.
+	 * 
+	 * @param picture - Das Bild zu der das Vaadin-Image erstellt werden soll.
+	 * @return Das erstellte Vaadin-Image
+	 */
 	private Image createImageFromPicture(Picture picture) {
 		File pictureFile = new File(picture.getPicturePath());
 		Resource pictureResource = new FileResource(pictureFile);

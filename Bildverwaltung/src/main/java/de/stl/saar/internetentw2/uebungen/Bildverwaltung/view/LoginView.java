@@ -14,12 +14,10 @@ import com.vaadin.ui.UI;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.forms.UserForm;
-import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.classes.UserServiceImpl;
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.UserService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
@@ -33,6 +31,12 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.navigator.SpringNavigator;
 
+/**
+ * Vaadin View Klasse
+ * Erstellt das Login-Fenster.
+ * 
+ * @author Johannes Gerwert
+ */
 @SpringView(name="login")
 public class LoginView extends TabSheet
 						implements View{
@@ -50,6 +54,9 @@ public class LoginView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt die Tabs des Tab-Layout mithilfe von Methoden
+	 */
 	@PostConstruct
 	public void init() {
 		FormLayout loginLayout = new FormLayout();
@@ -67,6 +74,11 @@ public class LoginView extends TabSheet
 		
 	}
 	
+	/**
+	 * Erstellt den Login-Teil des Login-Layouts.
+	 * 
+	 * @param loginLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void initializeLoginLayout(FormLayout loginLayout) {
 		
 		Binder<UserForm> userFormBinder = new Binder<>(UserForm.class);
@@ -124,6 +136,11 @@ public class LoginView extends TabSheet
 		loginLayout.addComponent(btnLogin);
 	}
 	
+	/**
+	 * Erstellt den Registrierungs-Teil des Login-Layouts.
+	 * 
+	 * @param registerLayout - Die Vaadin-Komponente, in der die Elemente erzeugt werden.
+	 */
 	private void initializeRegisterLayout(FormLayout registerLayout) {
 		
 		Binder<UserForm> userFormBinder = new Binder<>(UserForm.class);

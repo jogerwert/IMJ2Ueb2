@@ -2,7 +2,6 @@ package de.stl.saar.internetentw2.uebungen.Bildverwaltung.view;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringViewDisplay;
@@ -11,6 +10,12 @@ import com.vaadin.ui.UI;
 
 import de.stl.saar.internetentw2.uebungen.Bildverwaltung.entities.interfaces.User;
 
+/**
+ * Vaadin UI Klasse
+ * Konfiguriert das Hauptfenster und ruft die Views auf.
+ * 
+ * @author Johannes Gerwert
+ */
 @SpringUI
 @SpringViewDisplay
 public class NavigatorUI extends UI {
@@ -23,7 +28,9 @@ public class NavigatorUI extends UI {
 	
 	private User currentUser;
 	
-	
+	/**
+	 * Konfiguriert das Hauptfenster und ruft die naechste View auf.
+	 */
 	protected void init(VaadinRequest request) {
 		getPage().setTitle("Bildverwaltung");
 		
