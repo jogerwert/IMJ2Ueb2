@@ -7,18 +7,20 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.event.selection.MultiSelectionEvent;
 import com.vaadin.event.selection.MultiSelectionListener;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.navigator.SpringNavigator;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -50,15 +52,17 @@ import de.stl.saar.internetentw2.uebungen.Bildverwaltung.service.interfaces.User
 @SpringView(name="pictures")
 public class PictureView extends TabSheet
 						implements View{
-	
 	private static final long serialVersionUID = 6579452375615587856L;
 	
 	protected static final String LOGINVIEW = "login";
 	
 	private final String PICTURE_PATH = "upload" + File.separator + "img";
 	
-	private final float IMAGE_HEIGHT = 300.00f;
-	private final float IMAGE_WIDTH = 300.00f;
+	private final float IMAGE_HEIGHT = 150.00f;
+	private final float IMAGE_WIDTH = 150.00f;
+	
+	@Autowired
+	private SpringNavigator navigator;
 	
 	@Autowired
 	private PictureService pictureService;
@@ -70,8 +74,11 @@ public class PictureView extends TabSheet
 
 	public PictureView() {
 		
+	}
+	
+	@PostConstruct
+	public void init() {
 		NavigatorUI navUI = (NavigatorUI) UI.getCurrent();
-		Navigator navigator = navUI.getNavigator();
 		
 		User checkUser = navUI.getCurrentUser();
 		if(checkUser == null) {
@@ -81,13 +88,13 @@ public class PictureView extends TabSheet
 			
 			this.currentUser = checkUser;
 		
-			GridLayout myPicturesLayout = new GridLayout(1, 3);
+			GridLayout myPicturesLayout = new GridLayout(3, 1);
 			initializeMyPicturesLayout(myPicturesLayout);
 			
 			FormLayout uploadPictureLayout = new FormLayout();
-			initializeUploadPictureLayout(uploadPictureLayout);
+			initializeUploadPictureLayout(uploadPictureLayout, myPicturesLayout);
 			
-			GridLayout  sharedPicturesLayout = new GridLayout(1, 3);
+			GridLayout  sharedPicturesLayout = new GridLayout(3, 1);
 			initializeSharedPicturesLayout(sharedPicturesLayout);
 			
 			VerticalLayout logoutLayout = new VerticalLayout();
@@ -105,7 +112,7 @@ public class PictureView extends TabSheet
 		
 	}
 	
-	private void initializeUploadPictureLayout(FormLayout uploadPictureLayout) {
+	private void initializeUploadPictureLayout(FormLayout uploadPictureLayout, GridLayout myPicturesLayout) {
 		
 		Binder<PictureForm> pictureFormBinder = new Binder<>(PictureForm.class);
 		
@@ -170,7 +177,7 @@ public class PictureView extends TabSheet
 				"Der Titel darf nicht leer sein!")
 		.withValidator( (String title) -> pictureService.checkTitleAvailable(title),
 				"Der Titel wird bereits verwendet!")
-		.bind(PictureForm::getTitle, PictureForm::setDescription);
+		.bind(PictureForm::getTitle, PictureForm::setTitle);
 		
 		pictureFormBinder.forField(txtDescription)
 		.bind(PictureForm::getDescription, PictureForm::setDescription);
@@ -185,7 +192,6 @@ public class PictureView extends TabSheet
 				try {
 					pictureFormBinder.writeBean(pictureForm);
 					
-					//TODO: check if path exists
 					if(pathArray[0] == null) {
 						Notification.show("Bitte zuerst ein Bild hochladen!", 
 								Type.WARNING_MESSAGE);
@@ -201,6 +207,10 @@ public class PictureView extends TabSheet
 						Picture picture = 
 								pictureService.createPicture(picturePath, title, description, owner, releaseList);
 						pictureService.savePicture(picture);
+						
+						VerticalLayout pictureLayout = new VerticalLayout();
+						createSinglePictureDisplay(pictureLayout, picture);
+						myPicturesLayout.addComponent(pictureLayout);
 						
 						Notification.show("Bild erfolgreich gespeichert", Type.HUMANIZED_MESSAGE);
 					}
@@ -333,6 +343,10 @@ public class PictureView extends TabSheet
 		//TODO
 	}
 	
+	private void createSingleSharedPictureDisplay(VerticalLayout pictureLayout, Picture picture) {
+		
+	}
+	
 	private void initializeLogoutLayout(VerticalLayout logoutLayout) {
 		
 		Button btnLogout = new Button("Ausloggen");
@@ -342,7 +356,6 @@ public class PictureView extends TabSheet
 
 			@Override
 			public void buttonClick(ClickEvent event) {
-				Navigator navigator = UI.getCurrent().getNavigator();
 				NavigatorUI navUI = (NavigatorUI) UI.getCurrent();
 				
 				navUI.setCurrentUser(null);

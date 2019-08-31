@@ -21,15 +21,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.ValidationException;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.navigator.SpringNavigator;
 
@@ -42,8 +42,16 @@ public class LoginView extends TabSheet
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private SpringNavigator navigator;
 
 	public LoginView() {
+		
+	}
+	
+	@PostConstruct
+	public void init() {
 		FormLayout loginLayout = new FormLayout();
 		initializeLoginLayout(loginLayout);
 		
@@ -90,7 +98,6 @@ public class LoginView extends TabSheet
 				try {
 					userFormBinder.writeBean(userForm);
 					if(userFormBinder.validate().isOk()) {
-						Navigator navigator = UI.getCurrent().getNavigator();
 						NavigatorUI navUI = (NavigatorUI) UI.getCurrent();
 						
 						String userName = userForm.getUserName();
@@ -165,7 +172,6 @@ public class LoginView extends TabSheet
 				try {
 					userFormBinder.writeBean(userForm);
 					if(userFormBinder.validate().isOk()) {
-						Navigator navigator = UI.getCurrent().getNavigator();
 						User currentUser;
 						NavigatorUI navUI = (NavigatorUI) UI.getCurrent();
 						
