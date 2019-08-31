@@ -242,29 +242,19 @@ public class PictureView extends TabSheet
 	}
 	
 	private void createSinglePictureDisplay(VerticalLayout pictureLayout, Picture picture) {
-		String picturePath = picture.getPicturePath();
 		String title = picture.getTitle();
 		String description = picture.getDescription();
-		List<User> releaseList = picture.getRelease();
 		List<User> userList = userService.findAllUser();
 		
-		//Image
-		File pictureFile = new File(picturePath);
-		Resource pictureResource = new FileResource(pictureFile);
-		Image pictureComponent = new Image("", pictureResource);
-		pictureComponent.setHeight(IMAGE_HEIGHT, Unit.PIXELS);
-		pictureComponent.setWidth(IMAGE_WIDTH, Unit.PIXELS);
+		Image pictureComponent = createImageFromPicture(picture);
 		pictureLayout.addComponent(pictureComponent);
 		
-		//Title
 		Label lblTitle = new Label(title);
 		pictureLayout.addComponent(lblTitle);
 		
-		//Description
 		Label lblDescription = new Label(description);
 		pictureLayout.addComponent(lblDescription);
 		
-		//Button: Delete
 		Button btnDelete = new Button("Löschen");
 		btnDelete.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -6884133918023926301L;
@@ -287,11 +277,9 @@ public class PictureView extends TabSheet
 		
 		pictureLayout.addComponent(btnDelete);
 		
-		//Share
 		
 		FormLayout shareLayout = new FormLayout();
 		
-		//Button: open share list
 		Button btnOpenShare = new Button("Freigeben");
 		btnOpenShare.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -4908487318079395117L;
@@ -304,11 +292,16 @@ public class PictureView extends TabSheet
 		pictureLayout.addComponent(btnOpenShare);
 		
 		
-		//List: share select
 		List<User> shareList = new ArrayList<User>();
+		List<User> otherUsersList = new ArrayList<User>();
+		for (User user : userList) {
+			if(user.getUserId() != currentUser.getUserId()) {
+				otherUsersList.add(user);
+			}
+		}
 		
 		TwinColSelect<User> twinShareWith = new TwinColSelect<>();
-		twinShareWith.setItems(userList);
+		twinShareWith.setItems(otherUsersList);
 		twinShareWith.addSelectionListener(new MultiSelectionListener<User>() {
 			private static final long serialVersionUID = 9004150840293228440L;
 
@@ -320,15 +313,16 @@ public class PictureView extends TabSheet
 		});
 		shareLayout.addComponent(twinShareWith);
 		
-		//Button: share confirm
 		Button btnShare = new Button("Freigeben");
 		btnShare.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -4049168407669538249L;
 
 			@Override
 			public void buttonClick(ClickEvent event) {
+				List<User> releaseList = picture.getRelease();
 				releaseList.clear();
 				releaseList.addAll(shareList);
+				pictureService.savePicture(picture);
 				shareLayout.setVisible(false);
 			}
 		});
@@ -340,10 +334,40 @@ public class PictureView extends TabSheet
 	}
 	
 	private void initializeSharedPicturesLayout(GridLayout sharedPicturesLayout) {
-		//TODO
+		reloadSharedPictures(sharedPicturesLayout);
 	}
 	
-	private void createSingleSharedPictureDisplay(VerticalLayout pictureLayout, Picture picture) {
+	private void reloadSharedPictures(GridLayout sharedPicturesLayout) {
+		List<Picture> sharedPicturesList = pictureService.findByRelease(currentUser);
+		
+		sharedPicturesLayout.removeAllComponents();
+		for (Picture picture : sharedPicturesList) {
+			VerticalLayout sharedLayout = new VerticalLayout();
+			createSingleSharedPictureDisplay(sharedLayout, picture);
+			sharedPicturesLayout.addComponent(sharedLayout);
+		}
+	}
+	
+	private void createSingleSharedPictureDisplay(VerticalLayout sharedLayout, Picture picture) {
+		String ownerName = picture.getOwner().getUserName();
+		String title = picture.getTitle();
+		String description = picture.getDescription();
+		
+		
+		Image pictureComponent = createImageFromPicture(picture);
+		sharedLayout.addComponent(pictureComponent);
+		
+		String strSharedBy = "Freigegeben von: " + ownerName;
+		Label lblSharedBy = new Label(strSharedBy);
+		sharedLayout.addComponent(lblSharedBy);
+		
+		String strTitle = "Titel: " + title;
+		Label lblTitle = new Label(strTitle);
+		sharedLayout.addComponent(lblTitle);
+		
+		String strDescription = "Beschreibung: " + description;
+		Label lblDescription = new Label(strDescription);
+		sharedLayout.addComponent(lblDescription);
 		
 	}
 	
@@ -365,6 +389,16 @@ public class PictureView extends TabSheet
 		});
 		
 		logoutLayout.addComponent(btnLogout);
+	}
+	
+	private Image createImageFromPicture(Picture picture) {
+		File pictureFile = new File(picture.getPicturePath());
+		Resource pictureResource = new FileResource(pictureFile);
+		Image image = new Image("", pictureResource);
+		image.setHeight(IMAGE_HEIGHT, Unit.PIXELS);
+		image.setWidth(IMAGE_WIDTH, Unit.PIXELS);
+		
+		return image;
 	}
 
 }
