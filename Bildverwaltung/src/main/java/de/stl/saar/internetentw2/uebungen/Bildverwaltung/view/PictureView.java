@@ -308,7 +308,7 @@ public class PictureView extends TabSheet
 			@Override
 			public void selectionChange(MultiSelectionEvent<User> event) {
 				shareList.clear();
-				shareList.addAll(event.getNewSelection());
+				shareList.addAll(event.getAddedSelection());
 			}
 		});
 		shareLayout.addComponent(twinShareWith);
