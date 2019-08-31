@@ -36,7 +36,7 @@ public interface PictureRepository extends CrudRepository<PictureEntity, Long> {
 	/**
 	 * Findet Picture anhand des Owners.
 	 * @param owner - Ownder des Pictures.
-	 * @return Das gefundene Picture.
+	 * @return Die gefundenen Picture.
 	 */
 	
 	List<Picture> findByOwner(User owner);

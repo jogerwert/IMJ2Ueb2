@@ -99,7 +99,6 @@ public class UserEntity implements User {
 	
 	@Override
 	public String toString() {
-		return "UserEntity [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword 
-				+ ", userEmail=" + userEmail + ", dateOfBirth" + dateOfBirth + "]";
+		return userName;
 	}
 }
